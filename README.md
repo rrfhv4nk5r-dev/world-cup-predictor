@@ -3,7 +3,7 @@
 Pick 1st and 2nd place for each group, then see your Round of 16 matchups.
 
 ## Try it here:
-https://rrfhv4nk5r.github.io/world-cup-predictor
+https://rrfhv4nk5r-dev.github.io/world-cup-predictor
 
 ## Features:
 - Saves your picks automatically
