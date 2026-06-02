@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>World Cup 2026 Group Stage Predictor</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 16px;
+            background: #eef2f5;
+            color: #111;
+        }
+        h1 {
+            color: #1e5c2e;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 0;
+        }
+        h2 {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: normal;
+            margin-top: 0;
+            color: #2c3e2f;
+        }
+        .group {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #ddd;
+        }
+        .group h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #1e5c2e;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 6px;
+        }
+        .team-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .team-name {
+            width: 120px;
+            font-weight: bold;
+        }
+        .pick-btn {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.1s;
+        }
+        .pick-btn.selected-1 {
+            background: #ffd700;
+            border-color: #b8860b;
+            color: #000;
+            font-weight: bold;
+        }
+        .pick-btn.selected-2 {
+            background: #c0c0c0;
+            border-color: #808080;
+            color: #000;
+            font-weight: bold;
+        }
+        .pick-status {
+            margin-left: 8px;
+            font-size: 0.75rem;
+            color: #555;
+        }
+        button {
+            background: #0066cc;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            margin-top: 8px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        button:active {
+            background: #004c99;
+        }
+        .result-area {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-top: 24px;
+            border-left: 6px solid #1e5c2e;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            margin-top: 32px;
+            color: #555;
+        }
+        .error-msg {
+            color: #c0392b;
+            font-weight: bold;
+        }
+        .success-msg {
+            color: #1e5c2e;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🏆 World Cup 2026</h1>
+<h2>📋 Group Stage Predictor</h2>
+<p style="text-align:center;">Pick <strong style="color:#b8860b;">🥇 1st place</strong> and <strong style="color:#555;">🥈 2nd place</strong> for each group</p>
+
+<div id="groupsContainer"></div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0;">
+    <button id="generateR16Btn">🔮 Show my Round of 16</button>
+    <button id="resetBtn" style="background:#6c757d;">⟳ Reset all picks</button>
+</div>
+
+<div id="resultPanel" class="result-area">
+    <p>✨ Your Round of 16 matchups will appear here ✨</p>
+</div>
+
+<footer>
+    ⚽ Predict group winners — update after every match!<br>
+    Your picks save automatically.
+</footer>
+
+<script>
+    // 2026 World Cup Groups (12 groups of 4 teams)
+    // For simplicity, showing first 8 groups. You can add more.
+    const groupsData = {
+        "Group A": ["🇲🇽 Mexico", "🇿🇦 South Africa", "🇰🇷 South Korea", "🇨🇿 Czechia"],
+        "Group B": ["🇨🇦 Canada", "🇧🇦 Bosnia", "🇶🇦 Qatar", "🇨🇭 Switzerland"],
+        "Group C": ["🇧🇷 Brazil", "🇲🇦 Morocco", "🇭🇹 Haiti", "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland"],
+        "Group D": ["🇺🇸 USA", "🇵🇾 Paraguay", "🇦🇺 Australia", "🇹🇷 Türkiye"],
+        "Group E": ["🇩🇪 Germany", "🇨🇼 Curacao", "🇨🇮 Ivory Coast", "🇪🇨 Ecuador"],
+        "Group F": ["🇳🇱 Netherlands", "🇯🇵 Japan", "🇸🇪 Sweden", "🇹🇳 Tunisia"],
+        "Group G": ["🇧🇪 Belgium", "🇪🇬 Egypt", "🇮🇷 Iran", "🇳🇿 New Zealand"],
+        "Group H": ["🇪🇸󠁧 Spain", "🇨🇻 Cape Verde", "🇸🇦 Saudi Arabia", "🇺🇾 Uruguay"],
+        "Group I": ["🇫🇷 France", "🇸🇳 Senegal", "🇮🇶 Iraq", "🇳🇴 Norway"],
+        "Group J": ["🇩🇿 Algeria", "🇦🇷 Argentina", "🇯🇴 Jordan", "🇦🇹 Austria"],
+        "Group K": ["🇵🇹 Portugal", "🇨🇩 DR Congo", "🇺🇿 Uzbekistan", "🇨🇴 Colombia"],
+        "Group L": ["🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", "🇭🇷 Croatia", "🇵🇦 Panama", "🇬🇭 Ghana"]
+    };
+
+    // Storage for picks: { "Group A": { first: "Mexico", second: "Germany" } }
+    let picks = {};
+
+    function loadPicks() {
+        const saved = localStorage.getItem("wc2026_group_picks");
+        if (saved) {
+            try {
+                picks = JSON.parse(saved);
+            } catch(e) { console.log("error loading"); }
+        }
+        if (!picks) picks = {};
+    }
+
+    function savePicks() {
+        localStorage.setItem("wc2026_group_picks", JSON.stringify(picks));
+    }
+
+    function renderGroups() {
+        const container = document.getElementById("groupsContainer");
+        if (!container) return;
+        container.innerHTML = "";
+
+        for (const [groupName, teams] of Object.entries(groupsData)) {
+            const groupDiv = document.createElement("div");
+            groupDiv.className = "group";
+            groupDiv.innerHTML = `<h3>${groupName}</h3>`;
+
+            const currentPicks = picks[groupName] || { first: null, second: null };
+
+            for (const team of teams) {
+                const teamRow = document.createElement("div");
+                teamRow.className = "team-row";
+                
+                const teamSpan = document.createElement("span");
+                teamSpan.className = "team-name";
+                teamSpan.textContent = team;
+                
+                const btn1 = document.createElement("button");
+                btn1.textContent = "🥇 1st";
+                btn1.className = `pick-btn ${currentPicks.first === team ? 'selected-1' : ''}`;
+                btn1.onclick = (function(g, t) { 
+                    return function() { setPick(g, t, 'first'); };
+                })(groupName, team);
+                
+                const btn2 = document.createElement("button");
+                btn2.textContent = "🥈 2nd";
+                btn2.className = `pick-btn ${currentPicks.second === team ? 'selected-2' : ''}`;
+                btn2.onclick = (function(g, t) { 
+                    return function() { setPick(g, t, 'second'); };
+                })(groupName, team);
+                
+                const statusSpan = document.createElement("span");
+                statusSpan.className = "pick-status";
+                if (currentPicks.first === team) statusSpan.textContent = "🥇 1st";
+                else if (currentPicks.second === team) statusSpan.textContent = "🥈 2nd";
+                else statusSpan.textContent = "—";
+                
+                teamRow.appendChild(teamSpan);
+                teamRow.appendChild(btn1);
+                teamRow.appendChild(btn2);
+                teamRow.appendChild(statusSpan);
+                groupDiv.appendChild(teamRow);
+            }
+            container.appendChild(groupDiv);
+        }
+    }
+
+    function setPick(groupName, team, position) {
+        if (!picks[groupName]) picks[groupName] = { first: null, second: null };
+        
+        // If clicking already selected team for same position, unselect
+        if (picks[groupName][position] === team) {
+            picks[groupName][position] = null;
+        } else {
+            // If team is already selected for other position, remove that
+            if (picks[groupName].first === team) picks[groupName].first = null;
+            if (picks[groupName].second === team) picks[groupName].second = null;
+            // Also if other position has same team, clear it
+            picks[groupName][position] = team;
+        }
+        
+        savePicks();
+        renderGroups();
+        // Clear results so user regenerates
+        const resultDiv = document.getElementById("resultPanel");
+        if (resultDiv) resultDiv.innerHTML = "<p>✨ Tap 'Show my Round of 16' to see updated matchups ✨</p>";
+    }
+
+    function generateRoundOf16() {
+        // Check all groups have both first and second picks
+        let missingGroups = [];
+        for (const groupName of Object.keys(groupsData)) {
+            const groupPicks = picks[groupName];
+            if (!groupPicks || !groupPicks.first || !groupPicks.second) {
+                missingGroups.push(groupName);
+            }
+        }
+        
+        const resultDiv = document.getElementById("resultPanel");
+        if (missingGroups.length > 0) {
+            resultDiv.innerHTML = `<p class="error-msg">⚠️ Missing picks for: ${missingGroups.join(", ")}<br>Please pick 🥇 1st and 🥈 2nd for every group.</p>`;
+            return;
+        }
+        
+        // Build Round of 16 matchups (simplified: 1st of Group A vs 2nd of Group B, etc.)
+        const groupList = Object.keys(groupsData);
+        const matchups = [];
+        for (let i = 0; i < groupList.length; i += 2) {
+            if (i + 1 < groupList.length) {
+                const group1 = groupList[i];
+                const group2 = groupList[i+1];
+                const winner1 = picks[group1].first;
+                const runner2 = picks[group2].second;
+                const winner2 = picks[group2].first;
+                const runner1 = picks[group1].second;
+                matchups.push(`🥇 ${group1} winner (${winner1}) vs 🥈 ${group2} runner-up (${runner2})`);
+                matchups.push(`🥇 ${group2} winner (${winner2}) vs 🥈 ${group1} runner-up (${runner1})`);
+            }
+        }
+        
+        let html = `<h3>🏆 Your Round of 16 Matchups</h3><ul>`;
+        for (let m of matchups.slice(0, 16)) {
+            html += `<li>${m}</li>`;
+        }
+        html += `</ul><p><strong>✅ Save or screenshot this!</strong><br>Update picks after each match day.</p>`;
+        resultDiv.innerHTML = html;
+    }
+
+    function resetAllPicks() {
+        picks = {};
+        savePicks();
+        renderGroups();
+        const resultDiv = document.getElementById("resultPanel");
+        if (resultDiv) resultDiv.innerHTML = "<p>✨ All picks reset. Start fresh! ✨</p>";
+    }
+
+    // Initialize
+    loadPicks();
+    renderGroups();
+    
+    document.getElementById("generateR16Btn").addEventListener("click", generateRoundOf16);
+    document.getElementById("resetBtn").addEventListener("click", resetAllPicks);
+</script>
+</body>
+</html>
