@@ -280,7 +280,7 @@
         
         const resultDiv = document.getElementById("resultPanel");
         if (missingGroups.length > 0) {
-            resultDiv.innerHTML = `<p class="error-msg">⚠️ Missing 1st/2nd picks for: ${missingGroups.join(", ")}<br>(3rd/4th are optional for fun, but Round of 16 needs top two.)</p>`;
+            resultDiv.innerHTML = `<p class="error-msg">⚠️ Missing 1st/2nd picks for: ${missingGroups.join(", ")} >`;
             return;
         }
         
