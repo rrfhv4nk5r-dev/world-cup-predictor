@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>World Cup 2026 Group Stage Predictor</title>
+    <title>WCPredict – World Cup 2026 Group Predictor</title>
+    
+    <!-- GoatCounter Analytics (replace YOURCODE with your actual code) -->
+      <script data-goatcounter="https://sinou.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+    
     <style>
         * {
             box-sizing: border-box;
@@ -45,87 +51,64 @@
             padding-bottom: 6px;
         }
         .team-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding: 4px 0;
-}
-.team-name {
-    width: 100%;          /* Take full width on mobile */
-    font-weight: bold;
-    margin-bottom: 6px;
-    font-size: 1rem;
-}
-.pick-btn {
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 8px 12px;    /* Slightly larger touch target */
-    border-radius: 30px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    flex: 1 0 auto;       /* Allow buttons to grow/shrink */
-    min-width: 65px;      /* Prevent too narrow */
-    text-align: center;
-}
-.pick-status {
-    margin-left: 4px;
-    font-size: 0.75rem;
-    color: #555;
-    width: 100%;          /* Move status to new line on mobile */
-    text-align: right;
-}
-
-/* For tablets and desktop, change layout */
-@media (min-width: 600px) {
-    .team-row {
-        flex-wrap: nowrap;
-    }
-    .team-name {
-        width: 130px;
-        margin-bottom: 0;
-    }
-    .pick-btn {
-        flex: 0 0 auto;
-    }
-    .pick-status {
-        width: auto;
-        margin-left: 8px;
-    }
-}
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 4px 0;
         }
-       .pick-btn.selected-1 {
-    background: #ffd700 !important;
-    border-color: #b8860b !important;
-    color: #000 !important;
-    font-weight: bold !important;
-}
-
-.pick-btn.selected-2 {
-    background: #c0c0c0 !important;
-    border-color: #808080 !important;
-    color: #000 !important;
-    font-weight: bold !important;
-}
-
-.pick-btn.selected-3 {
-    background: #cd7f32 !important;
-    border-color: #8b5a2b !important;
-    color: #fff !important;
-    font-weight: bold !important;
-}
-
-.pick-btn.selected-4 {
-    background: #777 !important;
-    border-color: #555 !important;
-    color: #fff !important;
-    font-weight: bold !important;
-}
+        .team-name {
+            width: 100%;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+        .pick-btn {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            flex: 1 0 auto;
+            min-width: 65px;
+            text-align: center;
+            transition: 0.1s ease;
+            font-weight: normal;
+            color: #111;
+        }
         .pick-status {
-            margin-left: 8px;
+            margin-left: 4px;
             font-size: 0.75rem;
             color: #555;
+            width: 100%;
+            text-align: right;
+        }
+        /* Selected states */
+        .pick-btn.selected-1 {
+            background: #ffd700 !important;
+            border-color: #b8860b !important;
+            color: #000 !important;
+            font-weight: bold !important;
+        }
+        .pick-btn.selected-2 {
+            background: #c0c0c0 !important;
+            border-color: #808080 !important;
+            color: #000 !important;
+            font-weight: bold !important;
+        }
+        .pick-btn.selected-3 {
+            background: #cd7f32 !important;
+            border-color: #8b5a2b !important;
+            color: #fff !important;
+            font-weight: bold !important;
+        }
+        .pick-btn.selected-4 {
+            background: #777 !important;
+            border-color: #555 !important;
+            color: #fff !important;
+            font-weight: bold !important;
         }
         button {
             background: #0066cc;
@@ -159,19 +142,30 @@
             color: #c0392b;
             font-weight: bold;
         }
-        .success-msg {
-            color: #1e5c2e;
-            font-weight: bold;
+        /* Tablet and desktop adjustments */
+        @media (min-width: 600px) {
+            .team-row {
+                flex-wrap: nowrap;
+            }
+            .team-name {
+                width: 130px;
+                margin-bottom: 0;
+            }
+            .pick-btn {
+                flex: 0 0 auto;
+            }
+            .pick-status {
+                width: auto;
+                margin-left: 8px;
+            }
         }
     </style>
-    <script data-goatcounter="https://sinou.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
-<h1>🏆 World Cup 2026</h1>
-<h2>📋 Group Stage Predictor</h2>
-<p style="text-align:center;">Pick <strong style="color:#b8860b;">🥇 1st place</strong> and <strong style="color:#555;">🥈 2nd place</strong> for each group</p>
+<h1>🏆 WCPredict</h1>
+<h2>📋 World Cup 2026 Group Stage</h2>
+<p style="text-align:center;">Pick <strong>1st, 2nd, 3rd, and 4th</strong> for each group</p>
 
 <div id="groupsContainer"></div>
 
@@ -188,9 +182,11 @@
     ⚽ Predict group winners — update after every match!<br>
     Your picks save automatically.
 </footer>
+
 <script>
+    // 12 groups with real teams (update as needed)
     const groupsData = {
-        "Group A": ["🇲🇽 Mexico", "🇿🇦 South Africa", "🇰🇷 South Korea", "🇨🇿 Czechia"],
+         "Group A": ["🇲🇽 Mexico", "🇿🇦 South Africa", "🇰🇷 South Korea", "🇨🇿 Czechia"],
        "Group B": ["🇨🇦 Canada", "🇧🇦 Bosnia", "🇶🇦 Qatar", "🇨🇭 Switzerland"],
        "Group C": ["🇧🇷 Brazil", "🇲🇦 Morocco", "🇭🇹 Haiti", "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland"],
        "Group D": ["🇺🇸 USA", "🇵🇾 Paraguay", "🇦🇺 Australia", "🇹🇷 Türkiye"],
@@ -256,20 +252,18 @@
                     return function() { setPick(g, t, 'second'); };
                 })(groupName, team);
                 
-                // 3rd button (new)
+                // 3rd button
                 const btn3 = document.createElement("button");
                 btn3.textContent = "🥉 3rd";
-                btn3.className = `pick-btn ${currentPicks.third === team ? 'selected-1' : ''}`;
-                btn3.style.background = currentPicks.third === team ? "#cd7f32" : "#f0f0f0";
+                btn3.className = `pick-btn ${currentPicks.third === team ? 'selected-3' : ''}`;
                 btn3.onclick = (function(g, t) { 
                     return function() { setPick(g, t, 'third'); };
                 })(groupName, team);
                 
-                // 4th button (new)
+                // 4th button
                 const btn4 = document.createElement("button");
                 btn4.textContent = "4th";
-                btn4.className = `pick-btn ${currentPicks.fourth === team ? 'selected-2' : ''}`;
-                btn4.style.background = currentPicks.fourth === team ? "#999" : "#f0f0f0";
+                btn4.className = `pick-btn ${currentPicks.fourth === team ? 'selected-4' : ''}`;
                 btn4.onclick = (function(g, t) { 
                     return function() { setPick(g, t, 'fourth'); };
                 })(groupName, team);
@@ -297,15 +291,12 @@
     function setPick(groupName, team, position) {
         if (!picks[groupName]) picks[groupName] = { first: null, second: null, third: null, fourth: null };
         
-        // If clicking already selected team for the same position, unselect
         if (picks[groupName][position] === team) {
             picks[groupName][position] = null;
         } else {
-            // Remove this team from any other position in the same group
             for (let pos of ['first', 'second', 'third', 'fourth']) {
                 if (picks[groupName][pos] === team) picks[groupName][pos] = null;
             }
-            // Assign to new position
             picks[groupName][position] = team;
         }
         
@@ -319,14 +310,14 @@
         let missingGroups = [];
         for (const groupName of Object.keys(groupsData)) {
             const groupPicks = picks[groupName];
-            if (!groupPicks || !groupPicks.first || !groupPicks.second || !groupPicks.third || !groupPicks.fourth) {
+            if (!groupPicks || !groupPicks.first || !groupPicks.second) {
                 missingGroups.push(groupName);
             }
         }
         
         const resultDiv = document.getElementById("resultPanel");
         if (missingGroups.length > 0) {
-            resultDiv.innerHTML = `<p class="error-msg">⚠️ Missing 1st/2nd picks for: ${missingGroups.join(", ")} >`;
+            resultDiv.innerHTML = `<p class="error-msg">⚠️ Missing picks for: ${missingGroups.join(", ")};
             return;
         }
         
@@ -367,7 +358,5 @@
     document.getElementById("generateR16Btn").addEventListener("click", generateRoundOf16);
     document.getElementById("resetBtn").addEventListener("click", resetAllPicks);
 </script>
-
-
 </body>
 </html>
