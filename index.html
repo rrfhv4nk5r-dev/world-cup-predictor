@@ -45,24 +45,55 @@
             padding-bottom: 6px;
         }
         .team-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-        .team-name {
-            width: 120px;
-            font-weight: bold;
-        }
-        .pick-btn {
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            padding: 6px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.1s;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 4px 0;
+}
+.team-name {
+    width: 100%;          /* Take full width on mobile */
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 1rem;
+}
+.pick-btn {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px 12px;    /* Slightly larger touch target */
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    flex: 1 0 auto;       /* Allow buttons to grow/shrink */
+    min-width: 65px;      /* Prevent too narrow */
+    text-align: center;
+}
+.pick-status {
+    margin-left: 4px;
+    font-size: 0.75rem;
+    color: #555;
+    width: 100%;          /* Move status to new line on mobile */
+    text-align: right;
+}
+
+/* For tablets and desktop, change layout */
+@media (min-width: 600px) {
+    .team-row {
+        flex-wrap: nowrap;
+    }
+    .team-name {
+        width: 130px;
+        margin-bottom: 0;
+    }
+    .pick-btn {
+        flex: 0 0 auto;
+    }
+    .pick-status {
+        width: auto;
+        margin-left: 8px;
+    }
+}
         }
         .pick-btn.selected-1 {
             background: #ffd700;
