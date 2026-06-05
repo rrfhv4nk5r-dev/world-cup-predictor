@@ -5,58 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>World Cup 2026 Group Stage Predictor</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            font-family: system-ui, sans-serif;
             max-width: 900px;
             margin: 0 auto;
             padding: 16px;
             background: #eef2f5;
             color: #111;
         }
-        h1 {
-            color: #1e5c2e;
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 0;
-        }
-        h2 {
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: normal;
-            margin-top: 0;
-            color: #2c3e2f;
-        }
+        h1 { color: #1e5c2e; text-align: center; }
         .group {
             background: white;
             border-radius: 20px;
             margin-bottom: 24px;
             padding: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            border: 1px solid #ddd;
         }
-        .group h3 {
-            margin-top: 0;
-            margin-bottom: 12px;
-            color: #1e5c2e;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 6px;
-        }
+        .group h3 { margin-top: 0; color: #1e5c2e; border-bottom: 2px solid #ddd; padding-bottom: 6px; }
         .team-row {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             gap: 8px;
             margin-bottom: 12px;
-            padding: 4px 0;
         }
         .team-name {
             width: 100%;
             font-weight: bold;
             margin-bottom: 6px;
-            font-size: 1rem;
         }
         .pick-btn {
             background: #f0f0f0;
@@ -68,9 +45,6 @@
             flex: 1 0 auto;
             min-width: 65px;
             text-align: center;
-            transition: 0.1s ease;
-            font-weight: normal;
-            color: #111;
         }
         .pick-btn.selected {
             background: #2e7d32 !important;
@@ -79,7 +53,6 @@
             font-weight: bold !important;
         }
         .pick-status {
-            margin-left: 4px;
             font-size: 0.75rem;
             color: #555;
             width: 100%;
@@ -89,16 +62,10 @@
             background: #0066cc;
             border: none;
             color: white;
-            font-weight: bold;
             padding: 12px 24px;
             border-radius: 40px;
-            font-size: 1rem;
             margin-top: 8px;
-            margin-right: 10px;
             cursor: pointer;
-        }
-        button:active {
-            background: #004c99;
         }
         .result-area {
             background: white;
@@ -107,229 +74,144 @@
             margin-top: 24px;
             border-left: 6px solid #1e5c2e;
         }
-        footer {
-            text-align: center;
-            font-size: 0.75rem;
-            margin-top: 32px;
-            color: #555;
-        }
-        .error-msg {
-            color: #c0392b;
-            font-weight: bold;
-        }
+        footer { text-align: center; font-size: 0.75rem; margin-top: 32px; }
+        .error-msg { color: #c0392b; }
         @media (min-width: 600px) {
-            .team-row {
-                flex-wrap: nowrap;
-            }
-            .team-name {
-                width: 130px;
-                margin-bottom: 0;
-            }
-            .pick-btn {
-                flex: 0 0 auto;
-            }
-            .pick-status {
-                width: auto;
-                margin-left: 8px;
-            }
+            .team-row { flex-wrap: nowrap; }
+            .team-name { width: 130px; margin-bottom: 0; }
+            .pick-btn { flex: 0 0 auto; }
+            .pick-status { width: auto; margin-left: 8px; }
         }
     </style>
 </head>
 <body>
-
 <h1>🏆 World Cup 2026</h1>
 <h2>📋 Group Stage Predictor</h2>
 <p style="text-align:center;">Pick <strong>1st place</strong> and <strong>2nd place</strong> for each group</p>
-
 <div id="groupsContainer"></div>
-
 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0;">
     <button id="generateR16Btn">🔮 Show my Round of 16</button>
     <button id="resetBtn" style="background:#6c757d;">⟳ Reset all picks</button>
 </div>
-
 <div id="resultPanel" class="result-area">
     <p>✨ Your Round of 16 matchups will appear here ✨</p>
 </div>
+<footer>⚽ Predict group winners — update after every match!<br>Your picks save automatically.</footer>
 
-<footer>
-    ⚽ Predict group winners — update after every match!<br>
-    Your picks save automatically.
-</footer>
-
-<script>
-    const groupsData = {
-        "Group A": ["🇲🇽 Mexico", "🇿🇦 South Africa", "🇰🇷 South Korea", "🇨🇿 Czechia"],
-        "Group B": ["🇨🇦 Canada", "🇧🇦 Bosnia", "🇶🇦 Qatar", "🇨🇭 Switzerland"],
-        "Group C": ["🇧🇷 Brazil", "🇲🇦 Morocco", "🇭🇹 Haiti", "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland"],
-        "Group D": ["🇺🇸 USA", "🇵🇾 Paraguay", "🇦🇺 Australia", "🇹🇷 Türkiye"],
-        "Group E": ["🇩🇪 Germany", "🇨🇼 Curacao", "🇨🇮 Ivory Coast", "🇪🇨 Ecuador"],
-        "Group F": ["🇳🇱 Netherlands", "🇯🇵 Japan", "🇸🇪 Sweden", "🇹🇳 Tunisia"],
-        "Group G": ["🇧🇪 Belgium", "🇪🇬 Egypt", "🇮🇷 Iran", "🇳🇿 New Zealand"],
-        "Group H": ["🇪🇸󠁧 Spain", "🇨🇻 Cape Verde", "🇸🇦 Saudi Arabia", "🇺🇾 Uruguay"],
-        "Group I": ["🇫🇷 France", "🇸🇳 Senegal", "🇮🇶 Iraq", "🇳🇴 Norway"],
-        "Group J": ["🇩🇿 Algeria", "🇦🇷 Argentina", "🇯🇴 Jordan", "🇦🇹 Austria"],
-        "Group K": ["🇵🇹 Portugal", "🇨🇩 DR Congo", "🇺🇿 Uzbekistan", "🇨🇴 Colombia"],
-        "Group L": ["🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", "🇭🇷 Croatia", "🇵🇦 Panama", "🇬🇭 Ghana"]
+<<script>
+   // 2026 World Cup Groups (12 groups of 4 teams)
+   // For simplicity, showing first 8 groups. You can add more.
+   const groupsData = {
+       "Group A": ["🇲🇽 Mexico", "🇿🇦 South Africa", "🇰🇷 South Korea", "🇨🇿 Czechia"],
+       "Group B": ["🇨🇦 Canada", "🇧🇦 Bosnia", "🇶🇦 Qatar", "🇨🇭 Switzerland"],
+       "Group C": ["🇧🇷 Brazil", "🇲🇦 Morocco", "🇭🇹 Haiti", "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland"],
+       "Group D": ["🇺🇸 USA", "🇵🇾 Paraguay", "🇦🇺 Australia", "🇹🇷 Türkiye"],
+       "Group E": ["🇩🇪 Germany", "🇨🇼 Curacao", "🇨🇮 Ivory Coast", "🇪🇨 Ecuador"],
+       "Group F": ["🇳🇱 Netherlands", "🇯🇵 Japan", "🇸🇪 Sweden", "🇹🇳 Tunisia"],
+       "Group G": ["🇧🇪 Belgium", "🇪🇬 Egypt", "🇮🇷 Iran", "🇳🇿 New Zealand"],
+       "Group H": ["🇪🇸󠁧 Spain", "🇨🇻 Cape Verde", "🇸🇦 Saudi Arabia", "🇺🇾 Uruguay"],
+       "Group I": ["🇫🇷 France", "🇸🇳 Senegal", "🇮🇶 Iraq", "🇳🇴 Norway"],
+       "Group J": ["🇩🇿 Algeria", "🇦🇷 Argentina", "🇯🇴 Jordan", "🇦🇹 Austria"],
+       "Group K": ["🇵🇹 Portugal", "🇨🇩 DR Congo", "🇺🇿 Uzbekistan", "🇨🇴 Colombia"],
+       "Group L": ["🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", "🇭🇷 Croatia", "🇵🇦 Panama", "🇬🇭 Ghana"]
    };
 
     };
-
     let picks = {};
 
     function loadPicks() {
-        const saved = localStorage.getItem("wc2026_group_picks_full");
+        const saved = localStorage.getItem("wc2026_group_picks");
         if (saved) {
-            try {
-                picks = JSON.parse(saved);
-            } catch(e) {}
+            try { picks = JSON.parse(saved); } catch(e) {}
         }
         if (!picks) picks = {};
     }
-
     function savePicks() {
-        localStorage.setItem("wc2026_group_picks_full", JSON.stringify(picks));
+        localStorage.setItem("wc2026_group_picks", JSON.stringify(picks));
     }
-
     function renderGroups() {
         const container = document.getElementById("groupsContainer");
         if (!container) return;
         container.innerHTML = "";
-
         for (const [groupName, teams] of Object.entries(groupsData)) {
             const groupDiv = document.createElement("div");
             groupDiv.className = "group";
             groupDiv.innerHTML = `<h3>${groupName}</h3>`;
-
-            const currentPicks = picks[groupName] || { first: null, second: null, third: null, fourth: null };
-
+            const currentPicks = picks[groupName] || { first: null, second: null };
             for (const team of teams) {
                 const teamRow = document.createElement("div");
                 teamRow.className = "team-row";
-                
                 const teamSpan = document.createElement("span");
                 teamSpan.className = "team-name";
                 teamSpan.textContent = team;
-                
-                // 1st button
                 const btn1 = document.createElement("button");
                 btn1.textContent = "🥇 1st";
-                btn1.className = `pick-btn ${currentPicks.first === team ? 'selected-1' : ''}`;
-                btn1.onclick = (function(g, t) { 
-                    return function() { setPick(g, t, 'first'); };
-                })(groupName, team);
-                
-                // 2nd button
+                btn1.className = `pick-btn ${currentPicks.first === team ? 'selected' : ''}`;
+                btn1.onclick = (function(g, t) { return function() { setPick(g, t, 'first'); }; })(groupName, team);
                 const btn2 = document.createElement("button");
                 btn2.textContent = "🥈 2nd";
-                btn2.className = `pick-btn ${currentPicks.second === team ? 'selected-2' : ''}`;
-                btn2.onclick = (function(g, t) { 
-                    return function() { setPick(g, t, 'second'); };
-                })(groupName, team);
-                
-                // 3rd button (NEW)
-                const btn3 = document.createElement("button");
-                btn3.textContent = "🥉 3rd";
-                btn3.className = `pick-btn ${currentPicks.third === team ? 'selected-3' : ''}`;
-                btn3.onclick = (function(g, t) { 
-                    return function() { setPick(g, t, 'third'); };
-                })(groupName, team);
-                
-                // 4th button (NEW)
-                const btn4 = document.createElement("button");
-                btn4.textContent = "4th";
-                btn4.className = `pick-btn ${currentPicks.fourth === team ? 'selected-4' : ''}`;
-                btn4.onclick = (function(g, t) { 
-                    return function() { setPick(g, t, 'fourth'); };
-                })(groupName, team);
-                
+                btn2.className = `pick-btn ${currentPicks.second === team ? 'selected' : ''}`;
+                btn2.onclick = (function(g, t) { return function() { setPick(g, t, 'second'); }; })(groupName, team);
                 const statusSpan = document.createElement("span");
                 statusSpan.className = "pick-status";
                 if (currentPicks.first === team) statusSpan.textContent = "🥇 1st";
                 else if (currentPicks.second === team) statusSpan.textContent = "🥈 2nd";
-                else if (currentPicks.third === team) statusSpan.textContent = "🥉 3rd";
-                else if (currentPicks.fourth === team) statusSpan.textContent = "4th";
                 else statusSpan.textContent = "—";
-                
                 teamRow.appendChild(teamSpan);
                 teamRow.appendChild(btn1);
                 teamRow.appendChild(btn2);
-                teamRow.appendChild(btn3);
-                teamRow.appendChild(btn4);
                 teamRow.appendChild(statusSpan);
                 groupDiv.appendChild(teamRow);
             }
             container.appendChild(groupDiv);
         }
     }
-
     function setPick(groupName, team, position) {
-        if (!picks[groupName]) picks[groupName] = { first: null, second: null, third: null, fourth: null };
-        
+        if (!picks[groupName]) picks[groupName] = { first: null, second: null };
         if (picks[groupName][position] === team) {
             picks[groupName][position] = null;
         } else {
-            // Remove team from any other position in this group
-            for (let pos of ['first', 'second', 'third', 'fourth']) {
-                if (picks[groupName][pos] === team) picks[groupName][pos] = null;
-            }
+            if (picks[groupName].first === team) picks[groupName].first = null;
+            if (picks[groupName].second === team) picks[groupName].second = null;
             picks[groupName][position] = team;
         }
-        
-        { savePicks();
+        savePicks();
         renderGroups();
-        const resultDiv = document.getElementById("resultPanel");
-        if (resultDiv) resultDiv.innerHTML = "<p>✨ Tap 'Show my Round of 16' to see updated matchups ✨</p>";
+        document.getElementById("resultPanel").innerHTML = "<p>✨ Tap 'Show my Round of 16' to see updated matchups ✨</p>";
     }
-
     function generateRoundOf16() {
         let missingGroups = [];
         for (const groupName of Object.keys(groupsData)) {
             const groupPicks = picks[groupName];
-            if (!groupPicks || !groupPicks.first || !groupPicks.second) {
-                missingGroups.push(groupName);
-            }
-       
-        
+            if (!groupPicks || !groupPicks.first || !groupPicks.second) missingGroups.push(groupName);
+        }
         const resultDiv = document.getElementById("resultPanel");
         if (missingGroups.length > 0) {
-            resultDiv.innerHTML = `<p class="error-msg">⚠️ Missing 1st/2nd picks for: ${missingGroups.join(", ")}<br>(3rd/4th are optional, but Round of 16 needs top two.)</p>`;
+            resultDiv.innerHTML = `<p class="error-msg">⚠️ Missing picks for: ${missingGroups.join(", ")}<br>Please pick both 1st and 2nd for every group.</p>`;
             return;
         }
-        
         const groupList = Object.keys(groupsData);
         const matchups = [];
         for (let i = 0; i < groupList.length; i += 2) {
-            if (i + 1 < groupList.length) {
-                const group1 = groupList[i];
-                const group2 = groupList[i+1];
-                const winner1 = picks[group1].first;
-                const runner2 = picks[group2].second;
-                const winner2 = picks[group2].first;
-                const runner1 = picks[group1].second;
-                matchups.push(`🥇 ${group1} winner (${winner1}) vs 🥈 ${group2} runner-up (${runner2})`);
-                matchups.push(`🥇 ${group2} winner (${winner2}) vs 🥈 ${group1} runner-up (${runner1})`);
+            if (i+1 < groupList.length) {
+                const g1 = groupList[i], g2 = groupList[i+1];
+                matchups.push(`🥇 ${g1} winner (${picks[g1].first}) vs 🥈 ${g2} runner-up (${picks[g2].second})`);
+                matchups.push(`🥇 ${g2} winner (${picks[g2].first}) vs 🥈 ${g1} runner-up (${picks[g1].second})`);
             }
-        
-        let html = `<h3>🏆 Your Round of 16 Matchups</h3><ul>`;
-        for (let m of matchups.slice(0, 16)) {
-            html += `<li>${m}</li>`;
         }
-        html += `</ul><p><strong>✅ You can also predict 3rd/4th place in each group!</strong><br>Update picks after each match day.</p>`;
+        let html = `<h3>🏆 Your Round of 16 Matchups</h3><ul>`;
+        for (let m of matchups.slice(0,16)) html += `<li>${m}</li>`;
+        html += `</ul><p><strong>✅ Save or screenshot this!</strong><br>Update picks after each match day.</p>`;
         resultDiv.innerHTML = html;
     }
-
     function resetAllPicks() {
         picks = {};
         savePicks();
         renderGroups();
-        const resultDiv = document.getElementById("resultPanel");
-        if (resultDiv) resultDiv.innerHTML = "<p>✨ All picks reset. Start fresh! ✨</p>";
+        document.getElementById("resultPanel").innerHTML = "<p>✨ All picks reset. Start fresh! ✨</p>";
     }
-
     loadPicks();
     renderGroups();
-    
     document.getElementById("generateR16Btn").addEventListener("click", generateRoundOf16);
     document.getElementById("resetBtn").addEventListener("click", resetAllPicks);
 </script>
