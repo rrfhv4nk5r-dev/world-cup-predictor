@@ -276,7 +276,7 @@
             picks[groupName][position] = team;
         }
         
-        savePicks();
+        { savePicks();
         renderGroups();
         const resultDiv = document.getElementById("resultPanel");
         if (resultDiv) resultDiv.innerHTML = "<p>✨ Tap 'Show my Round of 16' to see updated matchups ✨</p>";
@@ -289,7 +289,7 @@
             if (!groupPicks || !groupPicks.first || !groupPicks.second) {
                 missingGroups.push(groupName);
             }
-        }
+       
         
         const resultDiv = document.getElementById("resultPanel");
         if (missingGroups.length > 0) {
@@ -310,7 +310,6 @@
                 matchups.push(`🥇 ${group1} winner (${winner1}) vs 🥈 ${group2} runner-up (${runner2})`);
                 matchups.push(`🥇 ${group2} winner (${winner2}) vs 🥈 ${group1} runner-up (${runner1})`);
             }
-        }
         
         let html = `<h3>🏆 Your Round of 16 Matchups</h3><ul>`;
         for (let m of matchups.slice(0, 16)) {
