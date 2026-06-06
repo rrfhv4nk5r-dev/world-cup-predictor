@@ -7,7 +7,38 @@
     <title>World Cup 2026 Group Predictor</title>
     <style>
         * { box-sizing: border-box; }
-        body {
+        body  
+        <!-- World Cup start date banner -->
+<div id="worldcup-banner" style="background: #ffd700; color: #1e5c2e; text-align: center; padding: 10px; margin: 10px 0; border-radius: 40px; font-weight: bold; font-size: 1rem;">
+    Loading countdown...
+</div>
+
+<script>
+(function() {
+    const startDate = new Date(2026, 5, 11); // June 11, 2026 (months are 0-indexed)
+    const today = new Date();
+    // Reset time to midnight for accurate day difference
+    today.setHours(0,0,0,0);
+    startDate.setHours(0,0,0,0);
+    
+    const banner = document.getElementById("worldcup-banner");
+    if (!banner) return;
+    
+    if (today < startDate) {
+        const diffDays = Math.ceil((startDate - today) / (1000 * 60 * 60 * 24));
+        banner.innerHTML = `🏆 World Cup 2026 starts in ${diffDays} day${diffDays !== 1 ? 's' : ''}! Make your picks now. ⚽`;
+        banner.style.background = "#ffd700";
+    } else if (today.getTime() === startDate.getTime()) {
+        banner.innerHTML = "🏆 World Cup 2026 starts TODAY! Finalize your predictions. 🎉";
+        banner.style.background = "#ffa500";
+    } else {
+        banner.innerHTML = "🏆 World Cup 2026 is underway — update your picks after each match! 📊";
+        banner.style.background = "#c0c0c0";
+        banner.style.color = "#111";
+    }
+})();
+</script>
+        {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             max-width: 1000px;
             margin: 0 auto;
