@@ -299,6 +299,66 @@
         if (resultDiv) resultDiv.innerHTML = "<p>✨ Tap 'Show my Round of 16' to see updated matchups ✨</p>";
     }
 
+<button id="shareBracketBtn" style="background:#2e7d32;">📋 Copy My Bracket</button>
+    // Share Bracket Functionality
+function generateBracketText() {
+    // Check if all picks are made
+    let missingGroups = [];
+    for (const groupName of Object.keys(groupsData)) {
+        const groupPicks = picks[groupName];
+        if (!groupPicks || !groupPicks.first || !groupPicks.second) {
+            missingGroups.push(groupName);
+        }
+    }
+    
+    if (missingGroups.length > 0) {
+        return `⚠️ Missing picks for: ${missingGroups.join(", ")}\nPlease complete all 1st and 2nd place picks first.`;
+    }
+    
+    let text = "🏆 MY WORLD CUP 2026 PREDICTIONS 🏆\n\n";
+    text += "📋 GROUP STAGE PICKS:\n";
+    for (const [groupName, teams] of Object.entries(groupsData)) {
+        const groupPicks = picks[groupName];
+        text += `${groupName}: 1st ${groupPicks.first}, 2nd ${groupPicks.second}\n`;
+    }
+    
+    text += "\n🔮 ROUND OF 16 MATCHUPS:\n";
+    const groupList = Object.keys(groupsData);
+    const matchups = [];
+    for (let i = 0; i < groupList.length; i += 2) {
+        if (i + 1 < groupList.length) {
+            const g1 = groupList[i];
+            const g2 = groupList[i+1];
+            const winner1 = picks[g1].first;
+            const runner2 = picks[g2].second;
+            const winner2 = picks[g2].first;
+            const runner1 = picks[g1].second;
+            matchups.push(`${winner1} vs ${runner2}`);
+            matchups.push(`${winner2} vs ${runner1}`);
+        }
+    }
+    for (let i = 0; i < matchups.length && i < 16; i++) {
+        text += `• ${matchups[i]}\n`;
+    }
+    
+    text += "\n👉 Build your own bracket at: https://rrfhv4nk5r-dev.github.io/world-cup-predictor/";
+    return text;
+}
+
+document.getElementById("shareBracketBtn").addEventListener("click", function() {
+    const bracketText = generateBracketText();
+    navigator.clipboard.writeText(bracketText).then(() => {
+        // Optional: show a temporary confirmation message
+        const btn = document.getElementById("shareBracketBtn");
+        const originalText = btn.innerText;
+        btn.innerText = "✅ Copied!";
+        setTimeout(() => { btn.innerText = originalText; }, 2000);
+    }).catch(() => {
+        alert("Could not copy. Please copy manually.");
+    });
+});
+
+    
     function generateRoundOf16() {
         let missingGroups = [];
         for (const groupName of Object.keys(groupsData)) {
