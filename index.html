@@ -2,402 +2,620 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/XxzmxSk0/trophy-1.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>World Cup 2026 Group Predictor</title>
+    <title>Road to the Trophy – World Cup 2026</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/XxzmxSk0/trophy-1.png">
     <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 16px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #1a1a2e;
-
-<script>
-(function() {
-    const startDate = new Date(2026, 5, 11); // June 11, 2026 (months are 0-indexed)
-    const today = new Date();
-    // Reset time to midnight for accurate day difference
-    today.setHours(0,0,0,0);
-    startDate.setHours(0,0,0,0);
-    
-    const banner = document.getElementById("worldcup-banner");
-    if (!banner) return;
-    
-    if (today < startDate) {
-        const diffDays = Math.ceil((startDate - today) / (1000 * 60 * 60 * 24));
-        banner.innerHTML = `🏆 World Cup 2026 starts in ${diffDays} day${diffDays !== 1 ? 's' : ''}! Make your picks now. ⚽`;
-        banner.style.background = "#ffd700";
-    } else if (today.getTime() === startDate.getTime()) {
-        banner.innerHTML = "🏆 World Cup 2026 starts TODAY! Finalize your predictions. 🎉";
-        banner.style.background = "#ffa500";
-    } else {
-        banner.innerHTML = "🏆 World Cup 2026 is underway — update your picks after each match! 📊";
-        banner.style.background = "#c0c0c0";
-        banner.style.color = "#111";
-    }
-})();
-</script>
-        {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 16px;
-            background: #eef2f5;
-            color: #111;
+        /* ───────────── RESET & BASE ───────────── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        h1 { color: #1e5c2e; text-align: center; }
-        h2 { text-align: center; font-weight: normal; margin-top: 0; }
-        .group {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            margin-bottom: 24px;
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e14;
+            color: #e8edf2;
+            min-height: 100vh;
             padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-}
-        .group h3 {
-            margin-top: 0;
-            margin-bottom: 12px;
-            color: #1e5c2e;
-            border-bottom: 2px solid #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .app {
+            max-width: 860px;
+            width: 100%;
+        }
+
+        /* ───────────── HEADER ───────────── */
+        .header {
+            text-align: center;
+            padding: 24px 0 32px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+            margin-bottom: 32px;
+        }
+
+        .header .trophy {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #f5e6a3, #d4af37);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header p {
+            color: #8896a6;
+            font-size: 0.95rem;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .header .round-badge {
+            display: inline-block;
+            margin-top: 10px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 4px 18px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #d4af37;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ───────────── MATCH CARDS ───────────── */
+        .match-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .match-card:hover {
+            border-color: rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .match-card .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #6a7a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             padding-bottom: 6px;
         }
-        .team-row {
+
+        .match-card .match-teams {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             gap: 8px;
-            margin-bottom: 12px;
-            padding: 4px 0;
         }
-        .team-name {
-            width: 100%;
-            font-weight: bold;
-            margin-bottom: 6px;
-            font-size: 1rem;
-        }
-        .pick-btn {
-            background:linear-gradient(135deg, #2c3e50, #1a1a2e);
-            border: none;
-            padding: 10px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 600;
+
+        .match-card .team-btn {
             flex: 1 0 auto;
-            min-width: 70px;
+            min-width: 80px;
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #c8d0d8;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-family: inherit;
         }
-        .pick-btn.selected {
-            background: linear-gradient(135deg, #f1c40f, #f39c12) !important;
-            border-color: #b8860b !important;
-            color: #1a1a2e; !important;
-            font-weight: bold !important;
+
+        .match-card .team-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
         }
-        .pick-status {
-            margin-left: 4px;
-            font-size: 0.75rem;
-            color: #555;
-            width: 100%;
+
+        .match-card .team-btn.selected {
+            background: linear-gradient(135deg, #d4af37, #b8942a);
+            border-color: #d4af37;
+            color: #0a0e14;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+        }
+
+        .match-card .vs {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #4a5a6a;
+            padding: 0 4px;
+            letter-spacing: 1px;
+            flex: 0 0 auto;
+        }
+
+        .match-card .match-status {
+            font-size: 0.7rem;
+            color: #4a5a6a;
+            margin-top: 8px;
             text-align: right;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 6px;
         }
-        .action-buttons {
+
+        .match-card .match-status .picked {
+            color: #d4af37;
+            font-weight: 600;
+        }
+
+        /* ───────────── ACTION BUTTONS ───────────── */
+        .actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin: 16px 0;
+            gap: 12px;
+            margin: 28px 0 20px;
         }
-        button {
-            background: #0066cc;
+
+        .actions button {
+            flex: 1 0 auto;
+            padding: 14px 28px;
             border: none;
-            color: white;
-            font-weight: bold;
-            padding: 12px 24px;
-            border-radius: 40px;
+            border-radius: 60px;
+            font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            letter-spacing: 0.3px;
         }
-        .reset-btn { background: #6c757d; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4af37, #b8942a);
+            color: #0a0e14;
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(212, 175, 55, 0.35);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #a0b0c0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e8edf2;
+        }
+
+        .btn-share {
+            background: linear-gradient(135deg, #2a7a4a, #1a5a3a);
+            color: #e8edf2;
+            box-shadow: 0 4px 16px rgba(42, 122, 74, 0.2);
+        }
+
+        .btn-share:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(42, 122, 74, 0.35);
+        }
+
+        /* ───────────── RESULTS / BRACKET ───────────── */
         .result-area {
-            background: white;
-            border-radius: 20px;
-            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 24px;
             margin-top: 24px;
-            border-left: 6px solid #1e5c2e;
+            transition: all 0.3s;
         }
-        footer {
+
+        .result-area h3 {
+            font-size: 1.1rem;
+            color: #d4af37;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+
+        .result-area .bracket-path {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+        }
+
+        .result-area .bracket-path .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #b0c0d0;
+        }
+
+        .result-area .bracket-path .step .arrow {
+            color: #4a5a6a;
+            font-size: 1.2rem;
+        }
+
+        .result-area .bracket-path .step .winner {
+            color: #d4af37;
+            font-weight: 700;
+        }
+
+        .result-area .empty-state {
+            color: #6a7a8a;
+            font-size: 0.95rem;
             text-align: center;
-            font-size: 0.75rem;
-            margin-top: 32px;
-            color: #555;
+            padding: 16px 0;
         }
-        .error-msg { color: #c0392b; font-weight: bold; }
-        @media (min-width: 600px) {
-            .team-row { flex-wrap: nowrap; }
-            .team-name { width: 140px; margin-bottom: 0; }
-            .pick-btn { flex: 0 0 auto; }
-            .pick-status { width: auto; margin-left: 8px; }
+
+        /* ───────────── FOOTER ───────────── */
+        .footer {
+            text-align: center;
+            padding: 32px 0 12px;
+            font-size: 0.7rem;
+            color: #3a4a5a;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 32px;
+            letter-spacing: 0.3px;
+        }
+
+        .footer a {
+            color: #6a7a8a;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #d4af37;
+        }
+
+        /* ───────────── RESPONSIVE ───────────── */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .header h1 { font-size: 1.6rem; }
+            .match-card { padding: 14px 16px; }
+            .match-card .team-btn {
+                min-width: 60px;
+                font-size: 0.8rem;
+                padding: 8px 10px;
+            }
+            .actions button {
+                font-size: 0.85rem;
+                padding: 12px 18px;
+            }
+            .result-area { padding: 16px; }
         }
     </style>
-    <script data-goatcounter="https://sinou.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-
 </head>
 <body>
-    <!-- Live Score Ticker for World Cup 2026 -->
-<div style="background-color: #1e5c2e; color: white; padding: 10px 16px; text-align: center; font-size: 0.9rem; border-bottom: 2px solid #ffd700; position: relative; z-index: 10;">
-    <span id="scoreboard-message">🏆 Loading live scores...</span>
-    <span style="margin-left: 15px; font-size: 0.75rem; opacity: 0.8;">⏱️ Updates at each page refresh</span>
-</div>
-<!-- World Cup start date banner -->
-<div id="worldcup-banner" style="background: #ffd700; color: #1e5c2e; text-align: center; padding: 10px; margin: 10px 0; border-radius: 40px; font-weight: bold; font-size: 1rem;">
-    Loading countdown...
+
+<div class="app">
+
+    <!-- ═══ HEADER ═══ -->
+    <header class="header">
+        <span class="trophy">🏆</span>
+        <h1>Road to the Trophy</h1>
+        <p>Pick the winners. Follow the path.</p>
+        <span class="round-badge">⚡ Round of 32</span>
+    </header>
+
+    <!-- ═══ MATCHES ═══ -->
+    <div id="matchesContainer"></div>
+
+    <!-- ═══ ACTIONS ═══ -->
+    <div class="actions">
+        <button class="btn-primary" id="generateBtn">🔮 Show My Road</button>
+        <button class="btn-secondary" id="resetBtn">⟳ Reset All</button>
+        <button class="btn-share" id="shareBtn">📋 Copy My Bracket</button>
+    </div>
+
+    <!-- ═══ RESULTS ═══ -->
+    <div class="result-area" id="resultArea">
+        <div class="empty-state">✨ Pick a winner for each match to start your road.</div>
+    </div>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="footer">
+        Built by a young fan · World Cup 2026 · <a href="#" onclick="window.location.reload();">↻ Refresh</a>
+    </footer>
+
 </div>
 
 <script>
-(function() {
-    const startDate = new Date(2026, 5, 11); // June 11, 2026 (months are 0-indexed)
-    const today = new Date();
-    // Reset time to midnight for accurate day difference
-    today.setHours(0,0,0,0);
-    startDate.setHours(0,0,0,0);
-    
-    const banner = document.getElementById("worldcup-banner");
-    if (!banner) return;
-    
-    if (today < startDate) {
-        const diffDays = Math.ceil((startDate - today) / (1000 * 60 * 60 * 24));
-        banner.innerHTML = `🏆 World Cup 2026 starts in ${diffDays} day${diffDays !== 1 ? 's' : ''}! Make your picks now. ⚽`;
-        banner.style.background = "#ffd700";
-    } else if (today.getTime() === startDate.getTime()) {
-        banner.innerHTML = "🏆 World Cup 2026 starts TODAY! Finalize your predictions. 🎉";
-        banner.style.background = "#ffa500";
-    } else {
-        banner.innerHTML = "🏆 World Cup 2026 is underway — update your picks after each match! 📊";
-        banner.style.background = "#c0c0c0";
-        banner.style.color = "#111";
-    }
-})();
-</script>
-<h1>🏆 World Cup 2026</h1>
-<h2>📋 Group Stage Predictor</h2>
-<p style="text-align:center;">Pick <strong>1st place</strong> and <strong>2nd place</strong> for each group</p>
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ROUND OF 32 MATCH DATA
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const matchesData = [
+        { id: 0, teamA: "South Africa", teamB: "Canada" },
+        { id: 1, teamA: "Brazil", teamB: "Japan" },
+        { id: 2, teamA: "Germany", teamB: "Paraguay" },
+        { id: 3, teamA: "Netherlands", teamB: "Morocco" },
+        { id: 4, teamA: "Ivory Coast", teamB: "Norway" },
+        { id: 5, teamA: "France", teamB: "Sweden" },
+        { id: 6, teamA: "Mexico", teamB: "Ecuador" },
+        { id: 7, teamA: "England", teamB: "DR Congo" },
+        { id: 8, teamA: "Belgium", teamB: "Senegal" },
+        { id: 9, teamA: "United States", teamB: "Bosnia-Herzegovina" },
+        { id: 10, teamA: "Spain", teamB: "Austria" },
+        { id: 11, teamA: "Portugal", teamB: "Croatia" },
+        { id: 12, teamA: "Switzerland", teamB: "Algeria" },
+        { id: 13, teamA: "Australia", teamB: "Egypt" },
+        { id: 14, teamA: "Argentina", teamB: "Cape Verde" },
+        { id: 15, teamA: "Colombia", teamB: "Ghana" }
+    ];
 
-<div id="groupsContainer"></div>
+    let picks = {}; // { matchId: "teamName" }
 
-<div class="action-buttons">
-    <button id="generateR16Btn">🔮 Show my Round of 16</button>
-    <button id="resetBtn" class="reset-btn">⟳ Reset all picks</button>
-</div>
-
-<div id="resultPanel" class="result-area">
-    <p>✨ Your Round of 16 matchups will appear here ✨</p>
-</div>
-
-<footer>
-    ⚽ Predict group winners — update after every match!<br>
-    Your picks save automatically.
-</footer>
-
-<script>
-   const groupsData = {
-       "Group A": ["🇲🇽 Mexico", "🇿🇦 South Africa", "🇰🇷 South Korea", "🇨🇿 Czechia"],
-       "Group B": ["🇨🇦 Canada", "🇧🇦 Bosnia", "🇶🇦 Qatar", "🇨🇭 Switzerland"],
-       "Group C": ["🇧🇷 Brazil", "🇲🇦 Morocco", "🇭🇹 Haiti", "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland"],
-       "Group D": ["🇺🇸 USA", "🇵🇾 Paraguay", "🇦🇺 Australia", "🇹🇷 Türkiye"],
-       "Group E": ["🇩🇪 Germany", "🇨🇼 Curacao", "🇨🇮 Ivory Coast", "🇪🇨 Ecuador"],
-       "Group F": ["🇳🇱 Netherlands", "🇯🇵 Japan", "🇸🇪 Sweden", "🇹🇳 Tunisia"],
-       "Group G": ["🇧🇪 Belgium", "🇪🇬 Egypt", "🇮🇷 Iran", "🇳🇿 New Zealand"],
-       "Group H": ["🇪🇸󠁧 Spain", "🇨🇻 Cape Verde", "🇸🇦 Saudi Arabia", "🇺🇾 Uruguay"],
-       "Group I": ["🇫🇷 France", "🇸🇳 Senegal", "🇮🇶 Iraq", "🇳🇴 Norway"],
-       "Group J": ["🇩🇿 Algeria", "🇦🇷 Argentina", "🇯🇴 Jordan", "🇦🇹 Austria"],
-       "Group K": ["🇵🇹 Portugal", "🇨🇩 DR Congo", "🇺🇿 Uzbekistan", "🇨🇴 Colombia"],
-       "Group L": ["🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", "🇭🇷 Croatia", "🇵🇦 Panama", "🇬🇭 Ghana"]
-   };
-
-    let picks = {};
-
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STORAGE
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     function loadPicks() {
-        const saved = localStorage.getItem("wc2026_group_picks");
+        const saved = localStorage.getItem("ro32_picks");
         if (saved) {
-            try {
-                picks = JSON.parse(saved);
-            } catch(e) { console.error("Failed to load picks", e); }
+            try { picks = JSON.parse(saved); } catch (e) {}
         }
         if (!picks) picks = {};
     }
 
     function savePicks() {
-        localStorage.setItem("wc2026_group_picks", JSON.stringify(picks));
+        localStorage.setItem("ro32_picks", JSON.stringify(picks));
     }
 
-    function renderGroups() {
-        const container = document.getElementById("groupsContainer");
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // RENDER MATCHES
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    function renderMatches() {
+        const container = document.getElementById("matchesContainer");
         if (!container) return;
         container.innerHTML = "";
 
-        for (const [groupName, teams] of Object.entries(groupsData)) {
-            const groupDiv = document.createElement("div");
-            groupDiv.className = "group";
-            groupDiv.innerHTML = `<h3>${groupName}</h3>`;
+        matchesData.forEach((match, index) => {
+            const selected = picks[index] || null;
 
-            const currentPicks = picks[groupName] || { first: null, second: null };
+            const card = document.createElement("div");
+            card.className = "match-card";
 
-            for (const team of teams) {
-                const teamRow = document.createElement("div");
-                teamRow.className = "team-row";
-                
-                const teamSpan = document.createElement("span");
-                teamSpan.className = "team-name";
-                teamSpan.textContent = team;
-                
-                const btn1 = document.createElement("button");
-                btn1.textContent = "🥇 1st";
-                btn1.className = `pick-btn ${currentPicks.first === team ? 'selected' : ''}`;
-                btn1.onclick = (function(g, t) { 
-                    return function() { setPick(g, t, 'first'); };
-                })(groupName, team);
-                
-                const btn2 = document.createElement("button");
-                btn2.textContent = "🥈 2nd";
-                btn2.className = `pick-btn ${currentPicks.second === team ? 'selected' : ''}`;
-                btn2.onclick = (function(g, t) { 
-                    return function() { setPick(g, t, 'second'); };
-                })(groupName, team);
-                
-                const statusSpan = document.createElement("span");
-                statusSpan.className = "pick-status";
-                if (currentPicks.first === team) statusSpan.textContent = "🥇 1st";
-                else if (currentPicks.second === team) statusSpan.textContent = "🥈 2nd";
-                else statusSpan.textContent = "—";
-                
-                teamRow.appendChild(teamSpan);
-                teamRow.appendChild(btn1);
-                teamRow.appendChild(btn2);
-                teamRow.appendChild(statusSpan);
-                groupDiv.appendChild(teamRow);
+            const header = document.createElement("div");
+            header.className = "match-header";
+            header.innerHTML = `<span>Match ${index + 1} of 16</span><span>🏆 Round of 32</span>`;
+            card.appendChild(header);
+
+            const teamsDiv = document.createElement("div");
+            teamsDiv.className = "match-teams";
+
+            const btnA = document.createElement("button");
+            btnA.className = `team-btn ${selected === match.teamA ? 'selected' : ''}`;
+            btnA.textContent = match.teamA;
+            btnA.onclick = (function(idx, team) {
+                return function() { selectWinner(idx, team); };
+            })(index, match.teamA);
+
+            const vsSpan = document.createElement("span");
+            vsSpan.className = "vs";
+            vsSpan.textContent = "VS";
+
+            const btnB = document.createElement("button");
+            btnB.className = `team-btn ${selected === match.teamB ? 'selected' : ''}`;
+            btnB.textContent = match.teamB;
+            btnB.onclick = (function(idx, team) {
+                return function() { selectWinner(idx, team); };
+            })(index, match.teamB);
+
+            teamsDiv.appendChild(btnA);
+            teamsDiv.appendChild(vsSpan);
+            teamsDiv.appendChild(btnB);
+            card.appendChild(teamsDiv);
+
+            const status = document.createElement("div");
+            status.className = "match-status";
+            if (selected) {
+                status.innerHTML = `✓ <span class="picked">${selected}</span> advances`;
+            } else {
+                status.textContent = "— pick a winner";
             }
-            container.appendChild(groupDiv);
-        }
+            card.appendChild(status);
+
+            container.appendChild(card);
+        });
     }
 
-    function setPick(groupName, team, position) {
-        if (!picks[groupName]) picks[groupName] = { first: null, second: null };
-        
-        // If already selected for this position, deselect
-        if (picks[groupName][position] === team) {
-            picks[groupName][position] = null;
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // SELECT WINNER
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    function selectWinner(matchId, team) {
+        if (picks[matchId] === team) {
+            delete picks[matchId];
         } else {
-            // Remove team from other position in same group
-            if (picks[groupName].first === team) picks[groupName].first = null;
-            if (picks[groupName].second === team) picks[groupName].second = null;
-            // Assign to new position
-            picks[groupName][position] = team;
+            picks[matchId] = team;
         }
-        
         savePicks();
-        renderGroups();
-        const resultDiv = document.getElementById("resultPanel");
-        if (resultDiv) resultDiv.innerHTML = "<p>✨ Tap 'Show my Round of 16' to see updated matchups ✨</p>";
-    }
-    
-    function generateRoundOf16() {
-        let missingGroups = [];
-        for (const groupName of Object.keys(groupsData)) {
-            const groupPicks = picks[groupName];
-            if (!groupPicks || !groupPicks.first || !groupPicks.second) {
-                missingGroups.push(groupName);
-            }
+        renderMatches();
+        // Clear results so user sees fresh state
+        const resultArea = document.getElementById("resultArea");
+        if (resultArea) {
+            resultArea.innerHTML = `<div class="empty-state">✨ Tap "Show My Road" to see your path.</div>`;
         }
-        
-        const resultDiv = document.getElementById("resultPanel");
-        if (missingGroups.length > 0) {
-            resultDiv.innerHTML = `<p class="error-msg">⚠️ Missing 1st/2nd picks for: ${missingGroups.join(", ")}<br>Please pick both 1st and 2nd for every group.</p>`;
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // GENERATE ROAD
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    function generateRoad() {
+        const resultArea = document.getElementById("resultArea");
+        const allPicked = matchesData.every((_, idx) => picks[idx] !== undefined);
+
+        if (!allPicked) {
+            const missing = matchesData.filter((_, idx) => picks[idx] === undefined);
+            resultArea.innerHTML = `<div style="color: #c0392b; font-weight: 600; padding: 12px 0;">⚠️ You haven't picked a winner for ${missing.length} match${missing.length > 1 ? 'es' : ''}.</div>`;
             return;
         }
-        
-        const groupList = Object.keys(groupsData);
-        const matchups = [];
-        for (let i = 0; i < groupList.length; i += 2) {
-            if (i + 1 < groupList.length) {
-                const group1 = groupList[i];
-                const group2 = groupList[i+1];
-                const winner1 = picks[group1].first;
-                const runner2 = picks[group2].second;
-                const winner2 = picks[group2].first;
-                const runner1 = picks[group1].second;
-                matchups.push(`🥇 ${group1} winner (${winner1}) vs 🥈 ${group2} runner-up (${runner2})`);
-                matchups.push(`🥇 ${group2} winner (${winner2}) vs 🥈 ${group1} runner-up (${runner1})`);
+
+        // Build the road: Round of 32 winners → Round of 16 matchups
+        const winners = matchesData.map((match, idx) => picks[idx]);
+
+        // Round of 16 pairings (based on bracket order)
+        const ro16Pairs = [];
+        for (let i = 0; i < winners.length; i += 2) {
+            if (i + 1 < winners.length) {
+                ro16Pairs.push([winners[i], winners[i + 1]]);
             }
         }
-        
-        let html = `<h3>🏆 Your Round of 16 Matchups</h3><ul>`;
-        for (let m of matchups.slice(0, 16)) {
-            html += `<li>${m}</li>`;
+
+        // Quarterfinal pairings (simplified)
+        const qfPairs = [];
+        for (let i = 0; i < ro16Pairs.length; i += 2) {
+            if (i + 1 < ro16Pairs.length) {
+                qfPairs.push([ro16Pairs[i], ro16Pairs[i + 1]]);
+            }
         }
-        html += `</ul><p><strong>✅ Save or screenshot this!</strong><br>Update picks after each match day.</p>`;
-        resultDiv.innerHTML = html;
+
+        // Semifinal pairings
+        const sfPairs = [];
+        for (let i = 0; i < qfPairs.length; i += 2) {
+            if (i + 1 < qfPairs.length) {
+                sfPairs.push([qfPairs[i], qfPairs[i + 1]]);
+            }
+        }
+
+        // Final
+        const finalPair = sfPairs.length === 2 ? [sfPairs[0], sfPairs[1]] : null;
+
+        // ─── Build the HTML ───
+        let html = `<h3>🏆 Your Road to the Trophy</h3>`;
+
+        html += `<div style="margin: 12px 0 18px; padding: 12px 16px; background: rgba(212,175,55,0.06); border-radius: 16px; border-left: 3px solid #d4af37;">`;
+        html += `<div style="font-size:0.7rem; color:#6a7a8a; text-transform:uppercase; letter-spacing:0.5px;">Round of 32 Winners</div>`;
+        html += `<div style="display:flex; flex-wrap:wrap; gap:6px 16px; margin-top:4px;">`;
+        winners.forEach((w, i) => {
+            html += `<span style="font-size:0.85rem; font-weight:600; color:#e8edf2;">${i+1}. ${w}</span>`;
+        });
+        html += `</div></div>`;
+
+        // Round of 16
+        html += `<div style="margin: 12px 0;"><div style="font-size:0.7rem; color:#6a7a8a; text-transform:uppercase; letter-spacing:0.5px;">Round of 16 Matchups</div>`;
+        ro16Pairs.forEach((pair, i) => {
+            html += `<div style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:#b0c0d0; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+                        <span style="font-weight:600; color:#d4af37;">Match ${i+1}:</span>
+                        <span>${pair[0]}</span>
+                        <span style="color:#4a5a6a;">vs</span>
+                        <span>${pair[1]}</span>
+                     </div>`;
+        });
+        html += `</div>`;
+
+        // Quarterfinals
+        html += `<div style="margin: 12px 0;"><div style="font-size:0.7rem; color:#6a7a8a; text-transform:uppercase; letter-spacing:0.5px;">Quarterfinals</div>`;
+        qfPairs.forEach((pair, i) => {
+            html += `<div style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:#b0c0d0; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+                        <span style="font-weight:600; color:#d4af37;">QF ${i+1}:</span>
+                        <span>Winner of Match ${i*2+1}</span>
+                        <span style="color:#4a5a6a;">vs</span>
+                        <span>Winner of Match ${i*2+2}</span>
+                     </div>`;
+        });
+        html += `</div>`;
+
+        // Semifinals
+        html += `<div style="margin: 12px 0;"><div style="font-size:0.7rem; color:#6a7a8a; text-transform:uppercase; letter-spacing:0.5px;">Semifinals</div>`;
+        sfPairs.forEach((pair, i) => {
+            html += `<div style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:#b0c0d0; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+                        <span style="font-weight:600; color:#d4af37;">SF ${i+1}:</span>
+                        <span>Winner of QF ${i*2+1}</span>
+                        <span style="color:#4a5a6a;">vs</span>
+                        <span>Winner of QF ${i*2+2}</span>
+                     </div>`;
+        });
+        html += `</div>`;
+
+        // Final
+        if (finalPair) {
+            html += `<div style="margin: 16px 0 8px; padding: 14px 16px; background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.02)); border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); text-align:center;">`;
+            html += `<div style="font-size:0.7rem; color:#6a7a8a; text-transform:uppercase; letter-spacing:0.5px;">🏆 The Final</div>`;
+            html += `<div style="font-size:1.2rem; font-weight:800; color:#d4af37; margin:4px 0;">${finalPair[0][0]} vs ${finalPair[0][1]}</div>`;
+            html += `<div style="font-size:0.7rem; color:#6a7a8a; margin-top:4px;">Your champion will be crowned from this match</div>`;
+            html += `</div>`;
+        }
+
+        html += `<div style="margin-top:16px; font-size:0.75rem; color:#4a5a6a; text-align:center; border-top:1px solid rgba(255,255,255,0.04); padding-top:12px;">📋 Share this road with friends — tap "Copy My Bracket"</div>`;
+
+        resultArea.innerHTML = html;
     }
 
-    function resetAllPicks() {
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // SHARE BRACKET
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    function shareBracket() {
+        const allPicked = matchesData.every((_, idx) => picks[idx] !== undefined);
+        if (!allPicked) {
+            alert("⚠️ Complete all your picks first!");
+            return;
+        }
+
+        const winners = matchesData.map((_, idx) => picks[idx]);
+        let text = "🏆 MY ROAD TO THE TROPHY 🏆\n\n";
+        text += "⚡ Round of 32 Winners:\n";
+        winners.forEach((w, i) => { text += `${i+1}. ${w}\n`; });
+
+        text += "\n🔮 Round of 16 Matchups:\n";
+        for (let i = 0; i < winners.length; i += 2) {
+            if (i + 1 < winners.length) {
+                text += `Match ${i/2+1}: ${winners[i]} vs ${winners[i+1]}\n`;
+            }
+        }
+
+        text += "\n🏆 Build your own road: https://rrfhv4nk5r-dev.github.io/world-cup-predictor/";
+
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById("shareBtn");
+            const original = btn.textContent;
+            btn.textContent = "✅ Copied!";
+            setTimeout(() => { btn.textContent = original; }, 2000);
+        }).catch(() => {
+            alert("Could not copy. Please copy manually.");
+        });
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // RESET
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    function resetAll() {
         picks = {};
         savePicks();
-        renderGroups();
-        const resultDiv = document.getElementById("resultPanel");
-        if (resultDiv) resultDiv.innerHTML = "<p>✨ All picks reset. Start fresh! ✨</p>";
-    }
-
-    loadPicks();
-    renderGroups();
-    
-    document.getElementById("generateR16Btn").addEventListener("click", generateRoundOf16);
-    document.getElementById("resetBtn").addEventListener("click", resetAllPicks);
-</script>
-    <script>
-    // Live Score Ticker – uses ESPN public API (no API key needed)
-    async function fetchLiveScores() {
-        const scoreboardDiv = document.getElementById('scoreboard-message');
-        if (!scoreboardDiv) return;
-        
-        try {
-            const response = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard');
-            const data = await response.json();
-            
-            const events = data?.events || [];
-            const todayMatches = events.filter(event => {
-                const eventDate = new Date(event.date);
-                const today = new Date();
-                return eventDate.toDateString() === today.toDateString();
-            });
-            
-            if (todayMatches.length === 0) {
-                scoreboardDiv.innerHTML = '🏆 No World Cup matches scheduled today. Check back tomorrow!';
-                return;
-            }
-            
-            let scoreHtml = '🏆 TODAY\'S SCORES: ';
-            todayMatches.forEach(match => {
-                const homeTeam = match.competitions[0]?.competitors.find(c => c.homeAway === 'home');
-                const awayTeam = match.competitions[0]?.competitors.find(c => c.homeAway === 'away');
-                const homeScore = homeTeam?.score ?? '?';
-                const awayScore = awayTeam?.score ?? '?';
-                const status = match.status?.type?.description ?? 'Scheduled';
-                scoreHtml += `${homeTeam?.team?.displayName} ${homeScore} – ${awayScore} ${awayTeam?.team?.displayName} (${status}) | `;
-            });
-            scoreboardDiv.innerHTML = scoreHtml.slice(0, -3);
-        } catch (error) {
-            console.error('Could not load live scores:', error);
-            scoreboardDiv.innerHTML = '🏆 Live scores temporarily unavailable. Check ESPN for updates.';
+        renderMatches();
+        const resultArea = document.getElementById("resultArea");
+        if (resultArea) {
+            resultArea.innerHTML = `<div class="empty-state">✨ All picks reset. Start fresh.</div>`;
         }
     }
-    fetchLiveScores();
-    // Refresh scores every 5 minutes (300,000 ms)
-    setInterval(fetchLiveScores, 300000);
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // INIT
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    loadPicks();
+    renderMatches();
+
+    document.getElementById("generateBtn").addEventListener("click", generateRoad);
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+    document.getElementById("shareBtn").addEventListener("click", shareBracket);
 </script>
+
 </body>
 </html>
